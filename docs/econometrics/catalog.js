@@ -32,9 +32,9 @@ window.ECON_COURSE={
           "chapter": 1,
           "section": 3,
           "title": "截面、时间序列和面板数据",
-          "published": false,
-          "date": null,
-          "url": null
+          "published": true,
+          "date": "2026-10-09",
+          "url": "lessons/01-03.html"
         },
         {
           "id": "01-04",
