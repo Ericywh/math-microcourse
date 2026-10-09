@@ -28,9 +28,9 @@ window.MATH_COURSE={
           "section": 3,
           "number": 3,
           "title": "矩阵与多变量数据表",
-          "published": false,
-          "date": null,
-          "url": null
+          "published": true,
+          "date": "2026-10-09",
+          "url": "lessons/01-03.html"
         },
         {
           "chapter": 1,
