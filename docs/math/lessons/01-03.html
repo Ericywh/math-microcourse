@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="每日10分钟数学微课程全课程第3课：矩阵与多变量数据表。从观测与变量组成的数据矩阵到线性回归设计矩阵，含数值案例和两道自测。">
+<title>第一章·第三节｜矩阵与多变量数据表｜每日10分钟数学微课程</title>
+<link rel="stylesheet" href="../site.css">
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+<header><div class="wrap"><a href="../#catalog">← 返回数学课程目录</a><a href="../../study/#courses">学习中心 ↗</a></div></header>
+<div class="reading">
+<div class="kicker">CHAPTER 01 · LESSON 03</div>
+<h1>第一章·第三节｜矩阵与多变量数据表</h1>
+<p class="metadata">全课程第3课 / 共73课 · 预计学习时间约8分钟 · 2026年10月9日交付</p>
+<article class="article">
+<h2>一、核心问题与数学直觉</h2>
+<p class="lead"><strong>为什么统计学需要矩阵，而不只是多个向量？</strong></p>
+<p>上一课，我们学习了向量的线性组合，知道多个解释变量可以共同形成回归预测值。但当样本中既有多个观测对象，又有多个变量时，怎样才能有序地保存和运算这些数据？</p>
+<p>答案是矩阵。</p>
+<p>假设调查100个人，记录教育年限、工作经验和收入。每个人对应一行，每个变量对应一列，就形成一张数据表。</p>
+<p>将其中的数值按行列排列，便得到矩阵。它的两个维度具有不同含义：</p>
+<ul><li><strong>行：</strong>观测单位，例如个人、企业或地区。</li><li><strong>列：</strong>变量，例如教育年限、工作经验或收入。</li></ul>
+<p>矩阵不仅是一种数据存储形式，更重要的是，它使多个变量能够参与统一的数学运算。</p>
+<h2>二、关键公式</h2>
+<p>假设有 \(n\) 个观测对象、\(k\) 个解释变量，数据矩阵为：</p>
+<div class="mathbox">\[\boxed{Z=(z_{ij})\in\mathbb R^{n\times k}}\]</div>
+<p>其中，\(z_{ij}\) 表示第 \(i\) 个观测对象的第 \(j\) 个解释变量取值。</p>
+<p>如果在线性回归中加入截距项，通常构造设计矩阵：</p>
+<div class="mathbox">\[\boxed{X=[\mathbf 1_n\quad Z]\in\mathbb R^{n\times(k+1)}}\]</div>
+<p>\(\mathbf 1_n\) 是由 \(n\) 个1组成的列向量。</p>
+<p>这里要区分：</p>
+<ul><li>\(Z\) 是原始解释变量组成的矩阵。</li><li>\(X\) 是用于回归计算的设计矩阵。</li><li>\(y\) 是单独表示的被解释变量向量。</li></ul>
+<p>它们可以来自同一张数据表，但在模型中承担不同作用。</p>
+<h2>三、统计与计量经济学应用</h2>
+<p>在线性回归中，矩阵使模型能够一次处理全部样本：</p>
+<div class="mathbox">\[\widehat y=Xb\]</div>
+<p>如果 \(X\) 为 \(n\times p\) 矩阵，那么参数向量 \(b\) 必须为 \(p\times1\)，预测向量才是 \(n\times1\)。</p>
+<p>这一维度规则可以直接帮助我们检查模型是否构造正确。</p>
+<p>但矩阵形式不会自动保证数据质量。实际研究中必须注意两个问题。</p>
+<p><strong>观测对齐：</strong>\(X\) 的第 \(i\) 行与 \(y\) 的第 \(i\) 个值必须属于同一个观测单位。若数据合并时发生错位，即使矩阵运算没有报错，统计结果也可能失去意义。</p>
+<p><strong>变量冗余：</strong>如果设计矩阵中某些列可以由其他列线性表示，就可能导致OLS回归系数无法唯一确定。这个问题将在第二章通过矩阵秩解释。</p>
+<h2>四、数值案例：三个人的成绩数据</h2>
+<p>以下数据仅用于教学演示。</p>
+<table><thead><tr><th>学生</th><th>学习时间 \(x_1\)</th><th>是否辅导 \(x_2\)</th><th>成绩 \(y\)</th></tr></thead><tbody><tr><td>A</td><td>2</td><td>1</td><td>60</td></tr><tr><td>B</td><td>4</td><td>0</td><td>65</td></tr><tr><td>C</td><td>5</td><td>1</td><td>75</td></tr></tbody></table>
+<p>加入截距列之后：</p>
+<div class="mathbox">\[X=\begin{pmatrix}1&2&1\\1&4&0\\1&5&1\end{pmatrix},\qquad y=\begin{pmatrix}60\\65\\75\end{pmatrix}\]</div>
+<p><strong>各列含义：</strong>第1列为全部取1的截距项；第2列是学习时间（2、4、5）；第3列是是否辅导（1、0、1）。</p>
+<p>假设人为指定系数向量 \(b=(50,4,5)^\top\)。学生A的预测成绩为：</p>
+<div class="mathbox">\[\widehat y_A=50+4\times2+5\times1=63\]</div>
+<p>预测值63与实际成绩60之间的残差为−3。</p>
+<p>这里的系数只是演示矩阵计算，并非OLS估计值。学习时间与成绩之间的模型关系也不能直接解释为因果效应。</p>
+<h2>五、两分钟自测</h2>
+<div class="exercises">
+<p><strong>第1题｜概念理解</strong></p>
+<p>为什么被解释变量 \(y\) 通常不直接放入回归设计矩阵 \(X\)？</p>
+<p><strong>第2题｜计算应用</strong></p>
+<p>上述设计矩阵 \(X\) 的维度是多少？根据指定的系数 \(b=(50,4,5)^\top\)，学生C的预测成绩是多少？</p>
+<details><summary>查看两道题的参考答案</summary>
+<p><strong>第1题：</strong>\(X\) 用于存放模型的解释变量及所需的设计列，\(y\) 是模型需要解释或预测的结果。将 \(y\) 本身作为解释变量会造成直接的信息泄漏，并改变原本的回归问题。</p>
+<p><strong>第2题：</strong>\(X\) 为 \(3\times3\) 矩阵；学生C的预测成绩为 \(50+4\times5+5\times1=\boxed{75}\)。</p>
+</details>
+</div>
+<h2>六、知识衔接</h2>
+<p><strong>本节核心：</strong>矩阵通过行表示观测对象、列表示变量，将多变量数据组织为可以统一运算的结构。</p>
+<p><strong>此前联系：</strong>多个变量组成矩阵后，就可以利用上一课的线性组合形成预测结果。</p>
+<div class="next"><strong>下一节：</strong>第一章·第四节《矩阵与向量相乘：批量预测》（全课程第4课）。<br><a href="../#catalog">返回完整课程目录 →</a></div>
+</article></div><footer><div class="wrap">每日10分钟数学微课程 · <a href="../">六章73课课程目录</a></div></footer>
+</body></html>
