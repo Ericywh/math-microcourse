@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="每日10分钟数学微课程：向量的线性组合"><title>第1章·第2节｜向量的线性组合</title><link rel="stylesheet" href="../site.css"><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script></head><body><header><div class="wrap"><a href="../#catalog">← 返回数学课程目录</a><a href="../../study/#courses">学习中心 ↗</a></div></header><div class="reading"><div class="kicker">CHAPTER 01 · LESSON 02</div><h1>第一章·第2节｜向量的线性组合</h1><p class="subtitle">从加权总分到回归预测</p><p class="metadata">全课程第2课 · 预计学习时间约8分钟 · 已实际交付于2026年10月9日</p><article class="article">
+<h2>一、核心问题与数学直觉</h2>
+<p class="lead"><strong>为什么多个解释变量可以共同形成一个回归预测值？</strong></p>
+<p>上一课，我们将观测数据组织为向量，并认识了回归模型 \(Y=X\beta+\varepsilon\)。今天要理解其中的 \(X\beta\) 究竟意味着什么。</p>
+<p>假设预测一个人的收入，需要考虑教育年限和工作经验。两者对预测收入的贡献可能不同，因此需要分别赋予权重，再将贡献加总。</p>
+<p>这就是<strong>线性组合</strong>：把若干向量分别乘以一个数，再相加形成新向量。在回归中，每个解释变量对应一个包含所有样本观测值的列向量。将这些列向量分别乘以回归系数并相加，就能一次得到整个样本的预测值。</p>
+<p>需要注意，线性组合不等于加权平均：权重可以为负，也不要求权重之和等于1。</p>
+<h2>二、关键公式与必要推导</h2>
+<p>设 \(u_1,\ldots,u_k\) 都是 \(n\) 维向量，\(a_1,\ldots,a_k\) 是实数，则：</p>
+<div class="mathbox">\[\boxed{v=a_1u_1+a_2u_2+\cdots+a_ku_k}\]</div>
+<p>结果 \(v\) 仍是 \(n\) 维向量。成立的基本条件是参与相加的向量维度相同。</p>
+<p>在线性回归中，把解释变量矩阵 \(X\) 的各列记为 \(\mathbf 1,x_1,\ldots,x_{p-1}\)，就得到：</p>
+<div class="mathbox">\[\boxed{\widehat y=Xb=b_0\mathbf 1+\sum_{j=1}^{p-1}b_jx_j}\]</div>
+<p>其中，\(b_j\) 为指定或估计得到的系数，\(\mathbf 1\) 是所有分量均为1的截距列向量。这也解释了矩阵乘法的统计含义：<strong>矩阵乘以参数向量，等价于按参数权重对矩阵各列进行线性组合。</strong></p>
+<h2>三、统计与计量经济学应用</h2>
+<p>在线性回归中，OLS根据观测数据估计系数，再利用这些系数计算预测值。线性组合解决的是一个具体问题：如何把多个解释变量的信息转化为整个样本的预测向量？</p>
+<p>例如，教育年限系数为正、工作经验系数为负时，两列变量仍可正常组合。系数的正负表示在其他解释变量保持不变时的模型预测变化方向，并不自动具有因果含义。</p>
+<p>还有一个容易忽视的条件：矩阵中每一行必须对应同一个观测单位。若教育数据与收入数据的样本顺序不一致，即使矩阵运算正确，预测结果也会失去实际意义。</p>
+<h2>四、数值案例：三个样本的批量预测</h2>
+<p>考虑三个样本的两项解释变量。以下是人为构造的教学数据。</p>
+<table><thead><tr><th>个体</th><th>变量 \(x_1\)</th><th>变量 \(x_2\)</th><th>观测值 \(y\)</th></tr></thead><tbody><tr><td>A</td><td>1</td><td>0</td><td>6</td></tr><tr><td>B</td><td>2</td><td>2</td><td>6</td></tr><tr><td>C</td><td>3</td><td>1</td><td>8</td></tr></tbody></table>
+<p>设截距为2，变量 \(x_1\) 的系数为3，变量 \(x_2\) 的系数为−1。三个样本的预测向量是：</p>
+<div class="mathbox">\[\begin{aligned}\widehat y&=2\begin{pmatrix}1\\1\\1\end{pmatrix}+3\begin{pmatrix}1\\2\\3\end{pmatrix}-\begin{pmatrix}0\\2\\1\end{pmatrix}\\[4pt]&=\boxed{\begin{pmatrix}5\\6\\10\end{pmatrix}}\end{aligned}\]</div>
+<table><thead><tr><th>个体</th><th>计算过程</th><th>预测值</th></tr></thead><tbody><tr><td>A</td><td>2 + 3×1 − 0</td><td>5</td></tr><tr><td>B</td><td>2 + 3×2 − 2</td><td>6</td></tr><tr><td>C</td><td>2 + 3×3 − 1</td><td>10</td></tr></tbody></table>
+<p>对照实际观测值，三个残差分别为1、0、−2。这组系数只是为了演示线性组合而指定，并不是OLS估计结果。</p>
+<p>这个案例说明，回归预测本质上就是将解释变量矩阵的各列按照系数进行加权求和。</p>
+<h2>五、两分钟自测</h2>
+<div class="exercises"><p><strong>第1题｜概念理解</strong></p><p>为什么回归预测 \(\widehat y=Xb\) 可以理解为向量的线性组合？回归系数是否必须全部为正？</p>
+<p><strong>第2题｜计算应用</strong></p><p>沿用案例中的预测规则。若新样本满足 \(x_1=2\)、\(x_2=3\)，其预测值是多少？</p>
+<details><summary>查看两道题的参考答案</summary><p><strong>第1题：</strong>\(Xb\) 等于矩阵各列分别乘以对应系数后相加。回归系数不必为正，可以为负或零。</p><p><strong>第2题：</strong>预测值为 \(2+3\times2-3=\boxed{5}\)。</p></details></div>
+<h2>六、知识衔接</h2><p><strong>本节核心：</strong>线性组合通过加权求和，将多个向量合成为新向量。</p><p><strong>与前课联系：</strong>上一课认识了向量形式的回归模型，本课理解了其中的预测运算。</p>
+<div class="next"><strong>下一节：</strong>第一章·第三节《矩阵与多变量数据表》（全课程第3课）。<br><a href="../#catalog">返回课程目录 →</a></div></article></div><footer><div class="wrap"><a href="../#catalog">查看全部73节课程</a> · 每日10分钟数学微课程</div></footer></body></html>
