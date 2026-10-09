@@ -11,8 +11,8 @@
 <section class="hero"><div><div class="eyebrow">ECONOMETRICS · A 120-DAY LEARNING PATH</div><h1>从一条回归直线，<br>走向可信的实证研究。</h1><p class="lead">10章120节，从零基础系统学习统计模型、识别策略、实证研究设计、Stata与Python复现，最终形成阅读、复现和评价实证论文的能力。</p><p class="hint">每天一个核心问题 · 10—15分钟 · 直觉先于公式 · 使用真实数据</p></div><div class="hero-box"><small>THEORY × DATA × IDENTIFICATION</small><strong>Y = Xβ + u</strong><small>区分统计关联、预测与因果效应。</small></div></section>
 <div class="facts"><div class="fact"><strong id="published-count">1 / 120</strong><small>已归档全文 / 全课程</small></div><div class="fact"><strong>10 章</strong><small>循序渐进的方法体系</small></div><div class="fact"><strong>2 套</strong><small>Stata + Python双软件</small></div></div>
 <section aria-labelledby="reading"><div class="section-head"><div><h2 id="reading">最新完整课程</h2><p class="hint">只有已交付、已经归档的讲义才开放阅读链接。</p></div></div>
-<div class="feature"><div class="card"><div class="eyebrow">已归档 · 2026.10.09 · DAY 001</div><h3>第1章·第1节｜计量经济学究竟是什么？</h3><p>通过1978 Automobile Data，学习模型中的截距、斜率和误差项；使用Stata与Python绘制散点、估计回归，并理解相关关系不等于因果关系。</p><span class="tag">真实公开数据</span><span class="tag">OLS</span><span class="tag">双软件</span><span class="tag">练习及答案</span><br><a class="cta" href="lessons/01-01.html">阅读第1课完整讲义 ↗</a></div>
-<div class="card"><div class="eyebrow">下一讲 · DAY 002</div><h3>相关关系与因果关系</h3><p>理解为什么相关不等于因果，以及经济研究中识别因果效应需要哪些额外条件。</p><p class="hint">尚未作为正式第2课归档，完成授课后才会发布阅读链接。</p></div></div></section>
+<div class="feature"><div class="card"><div class="eyebrow" id="latest-meta">已归档 · 2026.10.09 · DAY 002</div><h3 id="latest-title">第1章·第2节｜相关关系与因果关系</h3><p id="latest-description">沿用Stata官方汽车数据，解释相关系数、反事实与混杂因素；使用Stata和Python比较简单回归及控制变量后的结果。</p><span class="tag">真实公开数据</span><span class="tag">因果识别</span><span class="tag">双软件</span><span class="tag">练习及答案</span><br><a class="cta" id="latest-link" href="lessons/01-02.html">阅读第2课完整讲义 ↗</a></div>
+<div class="card"><div class="eyebrow" id="next-meta">下一讲 · DAY 003</div><h3 id="next-title">截面、时间序列和面板数据</h3><p>下一节将介绍经济研究中的三种基本数据结构。</p><p class="hint">本讲尚未归档，正式授课并归档全文后才开放阅读链接。</p></div></div></section>
 <section class="outline" id="catalog" aria-labelledby="catalog-heading"><div class="section-head"><div><h2 id="catalog-heading">10章120节 · 完整课程索引</h2><p class="hint">可检索章节与课程主题，按真实归档状态筛选。</p></div></div>
 <div class="toolbar"><input type="search" id="search" placeholder="搜索OLS、DID、IV、RDD、GMM、因果识别…" aria-label="检索计量经济学课程"><div class="filters" aria-label="课程状态筛选"><button type="button" data-filter="all" aria-pressed="true">全部120节</button><button type="button" data-filter="live" aria-pressed="false">已归档</button><button type="button" data-filter="planned" aria-pressed="false">未讲授</button></div></div>
 <div id="results" aria-live="polite"><p>课程目录载入中…</p></div><p class="hint" id="summary"></p>
@@ -22,7 +22,17 @@
 <script>
 window.addEventListener("load",function(){
 const data=window.ECON_COURSE,container=document.getElementById("results"),query=document.getElementById("search"),summary=document.getElementById("summary");if(!data||!data.chapters){container.textContent="课程目录读取失败，请刷新页面。";return;}
-const all=data.chapters.flatMap(c=>c.lessons);document.getElementById("published-count").textContent=all.filter(x=>x.published).length+" / "+all.length;let filter="all";
+const all=data.chapters.flatMap(c=>c.lessons);document.getElementById("published-count").textContent=all.filter(x=>x.published).length+" / "+all.length;
+const latest=all.filter(x=>x.published&&x.url).at(-1), next=all.find(x=>!x.published);
+if(latest){
+document.getElementById("latest-meta").textContent="已归档 · "+(latest.date||"日期待核对")+" · DAY "+String(latest.number).padStart(3,"0");
+document.getElementById("latest-title").textContent="第"+latest.chapter+"章·第"+latest.section+"节｜"+(latest.number===1?"计量经济学究竟是什么？":latest.title);
+document.getElementById("latest-link").textContent="阅读第"+latest.number+"课完整讲义 ↗";
+document.getElementById("latest-link").href=latest.url;
+if(latest.number!==2)document.getElementById("latest-description").textContent="本节已归档完整教学正文，配套统计直觉、公式、公开数据、Stata/Python代码、练习与参考答案。";
+}
+if(next){document.getElementById("next-meta").textContent="下一讲 · DAY "+String(next.number).padStart(3,"0");document.getElementById("next-title").textContent=next.title;}
+let filter="all";
 function render(){container.replaceChildren();const q=query.value.trim().toLowerCase();let count=0;
 for(const chapter of data.chapters){const matches=chapter.lessons.filter(l=>(filter==="all"||filter==="live"&&l.published||filter==="planned"&&!l.published)&&(chapter.title+" "+l.title+" "+l.id+" "+l.number).toLowerCase().includes(q));if(!matches.length)continue;
 count+=matches.length;const details=document.createElement("details");details.className="chapter";details.open=!!q||chapter.number===1;const head=document.createElement("summary");const title=document.createElement("strong");title.textContent="第"+chapter.number+"章 · "+chapter.title;const stat=document.createElement("small");stat.textContent=chapter.lessons.filter(l=>l.published).length+" / "+chapter.lessons.length+"节已归档";head.append(title,stat);details.append(head);
