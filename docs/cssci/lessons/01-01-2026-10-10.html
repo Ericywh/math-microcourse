@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><meta name="description" content="CSSCI实证论文精读第1章第1节：民族精神的赓续传承与企业风险承担，企业固定效应与Stata复现"><title>第1章·第1节｜民族精神的赓续传承与企业风险承担｜研究学习中心</title><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script><style>
+:root{font-family:system-ui,-apple-system,"Noto Sans SC","PingFang SC","Microsoft Yahei",sans-serif;color:#1f343e;background:#f6f8f7;scroll-behavior:smooth}
+*{box-sizing:border-box}body{margin:0;line-height:1.82}a{color:#13746d}a:hover{text-decoration-thickness:2px}.top{background:#fff;border-bottom:1px solid #e1e9e8;padding:16px max(20px,calc((100vw - 1080px)/2));display:flex;gap:24px;flex-wrap:wrap}.top a{font-weight:650}main{width:min(1080px,calc(100% - 34px));margin:40px auto}.hero{background:linear-gradient(120deg,#e6f2ee,#f2f6f4);padding:35px;border:1px solid #d7e7e1;border-radius:18px}.eyebrow{font-size:.78rem;letter-spacing:.12em;color:#246f68;font-weight:800}h1{font-size:clamp(1.45rem,3.2vw,2.35rem);line-height:1.35;margin:14px 0}.meta{color:#5e737b;font-size:.94rem}.layout{display:grid;grid-template-columns:205px minmax(0,1fr);gap:26px;margin:25px 0}aside{position:sticky;top:18px;align-self:start;background:#fff;border:1px solid #e0e9e6;padding:18px;border-radius:12px}aside a{display:block;padding:6px 0;font-size:.86rem;text-decoration:none}article{background:white;border:1px solid #e0e8e6;border-radius:16px;padding:27px 34px;min-width:0}section{margin:12px 0 28px}h2{font-size:1.23rem;color:#175f5b;border-bottom:1px solid #e4eceb;padding-bottom:9px;margin:24px 0 16px}p{margin:12px 0}ul{padding-left:1.5rem}li{margin:8px 0}.math{max-width:100%;overflow-x:auto;margin:22px 0;padding:12px;background:#f7fafa;border-radius:10px}.tablewrap{overflow-x:auto;margin:20px 0;border:1px solid #e4eae8;border-radius:9px}table{border-collapse:collapse;width:100%;font-size:.89rem;min-width:570px}th{background:#edf5f2;text-align:left;color:#225a57}td,th{padding:11px 12px;border-bottom:1px solid #e5eceb;vertical-align:top}tr:last-child td{border-bottom:0}.codehead{margin-top:20px;border:1px solid #d8e7e1;border-bottom:0;border-radius:10px 10px 0 0;padding:8px 13px;background:#eaf4f0;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.85rem;font-weight:700}.codehead button{background:white;border:1px solid #b7d0ca;padding:6px 12px;border-radius:6px;cursor:pointer}pre{margin:0 0 20px;padding:20px;border-radius:0 0 10px 10px;background:#142b32;color:#dcefeb;overflow-x:auto;font-size:.84rem;line-height:1.65}footer{color:#60757d;margin:25px 0 45px;font-size:.84rem}@media(max-width:770px){.layout{grid-template-columns:1fr}aside{position:static}article{padding:18px}main{margin:18px auto}.hero{padding:20px}aside a{display:inline-block;padding:6px 12px}.math{font-size:.83rem}}</style></head><body><header class="top"><a href="../../study/#courses">← 返回课程总目录</a><a href="../">CSSCI精读库</a><a href="https://qks.sufe.edu.cn/mv_html/j00001/202608/wuGN3ZW6-dslj-7cRi-AXjV-kLx849JAF0kz_WEB.htm" target="_blank" rel="noopener">期刊原文 ↗</a></header><main><div class="hero"><div class="eyebrow">CSSCI · EMPIRICAL REPRODUCTION · LESSON 01</div><h1>第1章·第1节｜民族精神的赓续传承与企业风险承担</h1><div class="meta">李少林、王振宇、陈泽 · 财经研究 2026年第52卷第8期，154—168页 · 2026-10-10</div><p><strong>第1章第1节 · 全课程第1课（重新开课）</strong> · 方法：企业固定效应、面板OLS、IV · 代码未经运行。原有历史课程保留，不纳入本序列计数。</p></div><div class="layout"><aside><strong>文章目录</strong><a href="#s1">一、论文信息与真实贡献</a><a href="#s2">二、研究设计与识别策略</a><a href="#s3">三、核心计量模型</a><a href="#s4">四、数据来源与变量构造</a><a href="#s5">五、Stata复现代码</a><a href="#s6">六、主要结果与稳健性</a><a href="#s7">七、复现评价与审稿判断</a><a href="#s8">正式来源与下一讲</a></aside><article><p>重启说明：本篇作为新序列第1章·第1节／全课程第1课；之前已经讲过的论文保留为历史档案，不作为新序列课程累计。本文是独立撰写的论文方法解读，不复制原始PDF。</p>
+<section id="s1"><h2>一、论文信息与真实贡献</h2>
+<div class="tablewrap"><table><thead><tr><th>项目</th><th>已核对信息</th></tr></thead><tbody><tr><td>论文</td><td>民族精神的赓续传承与企业风险承担——基于相机治理能力的视角</td></tr><tr><td>作者</td><td>李少林、王振宇、陈泽</td></tr><tr><td>期刊</td><td>财经研究，2026年第52卷第8期，154—168页</td></tr><tr><td>DOI</td><td>10.16538/j.cnki.jfe.20260619.302</td></tr><tr><td>期刊资格</td><td>《财经研究》列于2025—2026版CSSCI来源期刊目录第208项</td></tr><tr><td>正式来源</td><td>期刊HTML正文与官方论文详情页可访问；网站提供PDF全文入口</td></tr></tbody></table></div>
+<p>研究问题是年报中体现的民族精神组织叙事，能否解释企业未来盈利波动与风险承担。文章真正值得学习的是文本变量测量、前瞻性季度滚动风险指标、企业固定效应下的组内估计，以及按风险状态划分的异质性比较。本文对组织文化研究提供了新的数据与机制应用，但并未发明新的固定效应识别方法。</p>
+</section><section id="s2"><h2>二、研究设计与识别策略</h2>
+<p>研究单位为沪深A股上市企业—年度。Y为行业调整后ROA在未来连续12个季度的样本标准差（risk），X为企业年报MD&amp;A文本提取的natspirit指标。研究重点是β所描述的条件相关关系。原文未定义潜在结果意义上的ATT或ATE；若将β解释为文化变化的因果效应，需要企业固定效应、年份固定效应和协变量条件下，未观测的时变冲击与natspirit无关，以及测量与样本选择不存在系统性偏误。这些是分析者归纳的识别条件，不是论文已经证明的结果。</p>
+<p>基准识别变异主要来自同一企业不同年份的文本指标变化，而非企业之间长期稳定的文化差异。年报措辞变化可能同时反映企业管理层、战略、经营压力或披露激励变化，无法由企业固定效应消除。natspirit是文本表达的代理变量而非民族精神本体的直接观测。</p>
+<p>作者进一步将示范基地距离与同业异城、同城异业的文本指标组合为时变IV（原文式4）。它缓解共同决定的程度取决于排除限制：文化基地距离及同行、邻地叙事不能通过城市发展、当地教育环境、行业冲击等其他渠道直接影响企业风险。工具变量附表留存备索，无法据现有官网全文独立核验第一阶段F值与排除限制。</p>
+</section><section id="s3"><h2>三、核心计量模型</h2>
+<div class="math">\[risk_{iht}=\alpha+\beta\,natspirit_{iht}+\mathbf X_{iht}^{\top}\boldsymbol\theta+\vartheta_i+\lambda_h+\xi_t+\varepsilon_{iht}\]</div>
+<p>这是原文式（3），企业i、行业h、年份t。θ对应财务、治理及管理层协变量，ϑi、λh、ξt为企业、行业、年份固定效应，标准误聚类到企业。若行业归属不变，企业固定效应已吸收行业虚拟变量，代码中会自动识别共线性。系数β不是“民族精神提高一个单位就导致风险下降”的无条件因果参数。</p>
+<div class="math">\[risk_{iht}=sd\!\left(\left\{\frac{NP_{i\tau}}{TA_{i\tau}}-\overline{\frac{NP}{TA}}_{h\tau}\right\}_{\tau=q_t}^{q_t+11}\right)\]</div>
+<p>风险指标是原文式（1）至式（2）的简化转写，使用12个季度、行业均值调整的资产回报率，计算样本标准差。相邻年份的前瞻窗口明显重叠，既需要企业聚类，也应审查样本尾部季度覆盖和前瞻结果引出的时间顺序。复现前须核实原文q_t选取哪个季度起点与所有季度齐备规则。</p>
+</section><section id="s4"><h2>四、数据来源与变量构造</h2>
+<div class="tablewrap"><table><thead><tr><th>模块</th><th>口径与复现限制</th></tr></thead><tbody><tr><td>面板样本</td><td>2004—2023年，3308家上市企业、27413企业—年度观测；排除金融保险、ST/*ST/PT、关键变量缺失、行业唯一企业及存续不足3年企业；基准表1列6为27407个观测</td></tr><tr><td>财务数据</td><td>CSMAR，企业年报；CSMAR需学校或机构授权</td></tr><tr><td>被解释变量risk</td><td>未来12季度行业调整后ROA的样本标准差；不足连续12季度剔除</td></tr><tr><td>核心变量natspirit</td><td>企业年报MD&amp;A文本，参照Yue等（2024）词表与文本测量资源识别四类民族精神叙事；词典、清洗细节未在官网正文完整披露</td></tr><tr><td>控制变量</td><td>size、lev、listage、growth、grossProfit、hfdl5、cashflow、top1、big4、SOE、leaderAge、female、finBack、overseaBack</td></tr><tr><td>异常值</td><td>连续变量按上下1%缩尾</td></tr><tr><td>专利与网络</td><td>CNIPA、CNRDS专利引文；CSMAR供应链与工商企业注册；FactSet Revere跨国供应链。后两类存在机构/商业授权要求</td></tr><tr><td>变量复核</td><td>公司标识、行业代码、年报语料清理、文本词表、财务字段映射和行业均值计算样本须获得作者规则或另行标记自定口径</td></tr></tbody></table></div>
+<p>原文部分描述统计、测量方法、稳健性和IV结果留存备索，不能将“正文未披露”擅自改写为“作者没有做”。CNIPA可查询专利，完整批量引文和CNRDS、FactSet数据能否获得仍取决于实际许可。</p>
+</section><section id="s5"><h2>五、Stata复现代码</h2>
+<p>【自行推导的参考代码，非作者原始程序；未运行】代码区仅演示从季度数据聚合风险指标、企业年度面板固定效应回归和一个关联机制规格。字段名、季度起点和文本变量需自行按论文及数据字典核对；不承诺复现原文系数。</p>
+<div class="codehead"><span>Stata · 自行推导的参考代码</span><button type="button" onclick="copyCode(this)" aria-label="复制Stata代码">复制代码</button></div><pre><code>* 示例：季度财务数据已完成行业映射，字段仅为占位名
+use &quot;firm_quarter_panel.dta&quot;, clear
+isid firm_id qdate
+gen year = year(dofq(qdate))
+gen roa = net_profit_after_tax / total_assets if total_assets&gt;0
+bysort industry_id qdate: egen industry_roa = mean(roa)
+gen adj_roa = roa - industry_roa
+
+* 仅用于展示“向前12季度”的计算逻辑：
+* 需核对原文每年起点季度、利润分子和行业均值样本
+capture which rangestat
+if _rc ssc install rangestat
+rangestat (sd) risk=adj_roa (count) n_quarters=adj_roa, ///
+    interval(qdate 0 11) by(firm_id)
+replace risk=. if n_quarters!=12
+keep if quarter(dofq(qdate))==1
+keep firm_id year risk
+tempfile annualrisk
+save `annualrisk'
+
+* 合并合法获取的年度财务信息及自己复核的文本指标
+use &quot;verified_firm_year_panel.dta&quot;, clear
+isid firm_id year
+merge 1:1 firm_id year using `annualrisk', keep(match) nogen
+
+* 基准：企业与年份固定效应，行业固定效应在行业不变时被吸收
+global X size lev listage growth grossProfit hfdl5 ///
+         cashflow top1 big4 SOE leaderAge female ///
+         finBack overseaBack
+drop if missing(risk,natspirit)
+reghdfe risk natspirit $X, absorb(firm_id year) ///
+    vce(cluster firm_id)
+
+* 敏感性：只加年份效应，对照组间与组内估计
+reghdfe risk natspirit $X, absorb(year) vce(cluster firm_id)
+
+* 测量敏感性：已独立构建并核实的LLM文本指标才可运行
+capture confirm variable natspiritLLM
+if !_rc {
+    reghdfe risk natspiritLLM $X, absorb(firm_id year) ///
+        vce(cluster firm_id)
+}
+
+* 供应商集中度机制：只作关联机制分析
+capture confirm variable scDep
+if !_rc {
+    reghdfe scDep natspirit $X, absorb(firm_id year) ///
+        vce(cluster firm_id)
+}
+
+* IV的空间距离×同行业异城×同城市异行业交互工具，
+* 需作者数据字典、排除自身的加权细则和第一阶段检验；
+* 未核实前不编造可直接复现的IV回归。</code></pre>
+</section><section id="s6"><h2>六、主要结果与稳健性</h2>
+<div class="tablewrap"><table><thead><tr><th>原文定位</th><th>主要结果</th><th>读法</th></tr></thead><tbody><tr><td>表1列6</td><td>β=-0.134；企业聚类SE=0.043；N=27407；R²=0.508</td><td>作者报告1%水平显著；每1标准差natspirit变化相对于risk中位数2.012约低3.137%，此为描述尺度比较，不是风险事件概率下降</td></tr><tr><td>表1列1与列6</td><td>只有年份FE时-0.485；完整FE+控制时-0.134</td><td>估计量随控制结构明显变化，说明组间差异和遗漏变量问题不可忽略</td></tr><tr><td>表2列2与列1</td><td>过度风险组-0.138（0.055）；欠度风险组-0.007（0.023）</td><td>不显著与显著之差不等于两组效应有统计显著差异；应检验交互项的组间差</td></tr><tr><td>表3列1/2</td><td>大供应商依赖-0.824（0.310）；供应商伙伴度+0.779（0.337）</td><td>机制变量的条件相关证据，不等于已识别的因果中介</td></tr><tr><td>表4列1/2</td><td>发明申请量+0.158（0.023）；高被引创新质量+0.029（0.029）</td><td>数量效应显著，质量水平在该OLS规格下不显著；不能合并为普遍质量改善</td></tr></tbody></table></div>
+<p>核心稳健性：更换ROA为EBIT/资产并改变波动窗口回应Y的口径敏感性；2008年以后样本回应会计准则调整；LLM嵌入文本指标与三年平滑回应natspirit测量误差。官网正文称这些结果方向一致，但未刊出完整数值表；无法把它们当成经过本次复现的结果。IV只能部分回应内生性，不能仅凭二阶段显著断言排除限制成立。</p>
+</section><section id="s7"><h2>七、复现评价与审稿判断</h2>
+<ul><li>最值得学习：将企业季度数据形成滚动风险指标，再与年度文本指标合并；明确企业FE使用的是企业内部的时变信息。</li><li>识别风险：文本叙事的内生性、未来12季度窗口重叠、企业年度样本尾部截断、并发管理层变化与地区文化环境。</li><li>分组模型的风险：以基于当期结果的残差定义过度与欠度风险，可能出现机械分组或选择问题；应检验预先定义状态、分组阈值敏感性和交互项差异。</li><li>最优先改进：核查季度窗口和年份映射，建立可复核的词典/语料预处理流程，公开IV第一阶段和更有说服力的排除限制检验。</li><li>复现状态：官网正式HTML已核对；作者数据和原始do-file未取得，文本词表与若干附录留存备索，Stata参考代码尚未运行，尚未完成数值复现。</li></ul>
+</section><section id="s8"><h2>正式来源与下一讲</h2>
+<ul><li><a href="https://qks.sufe.edu.cn/mv_html/j00001/202608/wuGN3ZW6-dslj-7cRi-AXjV-kLx849JAF0kz_WEB.htm" target="_blank" rel="noopener">期刊完整HTML正文 ↗</a></li><li><a href="https://qks.sufe.edu.cn/J/CJYJ/Article/Details/A0wuGN3ZW6-dslj-7cRi-AXjV-kLx849JAF0kz/CN" target="_blank" rel="noopener">官方论文详情与PDF入口 ↗</a></li><li><a href="https://doi.org/10.16538/j.cnki.jfe.20260619.302" target="_blank" rel="noopener">DOI ↗</a></li><li><a href="https://rwskc.zust.edu.cn/__local/3/CB/3F/ADA3D8675FEDE867F8F7B11E39E_8198B043_2A396.pdf?e=.pdf" target="_blank" rel="noopener">2025—2026 CSSCI来源期刊目录（高校转载） ↗</a></li></ul>
+<p>当前进度：新序列第1章第1节／全课程第1课。标签：企业固定效应、文本测量、季度波动、IV、供应链与创新。下一讲：第1章第2节，选用另一篇真实全文可得的面板实证论文，对比组内估计与组间估计的识别条件。</p></section></article></div><footer>作者独立撰写的学习报告。引用论文事实以期刊正文为准，未上传受限PDF或数据。网页发布进度和数值复现进度分开记录。</footer></main><script>function copyCode(b){const c=b.parentElement.nextElementSibling.querySelector("code").textContent;navigator.clipboard.writeText(c).then(()=>{b.textContent="已复制"}).catch(()=>{b.textContent="请手动复制"})}</script></body></html>
