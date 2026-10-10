@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="PSM-DID系统课程第1课：DID的基本原理。反事实、ATT、平行趋势、手算与Stata/Python代码。">
+<title>第1章·第1节｜DID的基本原理 — PSM-DID系统课程</title>
+<style>
+:root{--ink:#17263c;--muted:#53667c;--line:#dce4ed;--accent:#176b75;--bg:#f4f7fa;--card:#fff}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC","Microsoft Yahei",sans-serif;font-size:16px;line-height:1.9}
+.hero{background:linear-gradient(120deg,#17334c,#155d66);color:white;padding:42px 20px 52px}
+.hero-inner{max-width:880px;margin:auto}.eyebrow{letter-spacing:.08em;font-size:13px;opacity:.85;font-weight:650}.hero h1{font-size:clamp(25px,3.7vw,38px);line-height:1.35;margin:14px 0}.hero p{max-width:720px;opacity:.94;margin:0}
+main{max-width:880px;margin:-22px auto 45px;background:var(--card);padding:42px 55px;border-radius:16px;box-shadow:0 10px 36px #23374b0e}
+h2{font-size:21px;margin:43px 0 14px;border-bottom:1px solid var(--line);padding-bottom:9px}h3{font-size:17px;margin:24px 0 9px}p{margin:0 0 15px}
+a{color:#146877;text-underline-offset:3px}strong{color:#123d51}table{border-collapse:collapse;width:100%;margin:18px 0 24px;font-size:15px}th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}th{background:#eaf1f5;font-weight:650}
+.equation{overflow:auto;margin:16px 0;padding:8px}.notice{border-left:3px solid var(--accent);padding:12px 17px;background:#eef6f5;margin:18px 0}.figure{border:1px solid var(--line);border-radius:10px;padding:15px 18px;background:#fcfefe;margin:16px 0 23px}.figcaption{font-size:13px;color:var(--muted);margin-top:0;text-align:center}
+pre{background:#122338;color:#edf4f9;padding:19px;border-radius:10px;font-size:13px;line-height:1.65;overflow:auto;tab-size:4}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}p code{color:#0d6071;background:#eaf3f5;padding:2px 5px;border-radius:4px}
+footer{color:var(--muted);max-width:880px;margin:auto;padding:0 20px 35px;font-size:13px}.footerlink{display:inline-block;margin-top:8px}
+@media(max-width:640px){body{font-size:15px}.hero{padding:30px 18px 45px}main{padding:25px 19px;margin:-15px 10px 25px;border-radius:11px}th,td{padding:7px;font-size:13px}h2{font-size:19px}}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script></head>
+<body>
+<header class="hero"><div class="hero-inner"><div class="eyebrow">PSM–DID 系统精讲课程 · 全课程第 1 课 / 共 10 课</div><h1>第1章·第1节｜DID的基本原理</h1><p>为什么处理组与对照组的政策前后变化差异，可以用于估计政策效应？</p></div></header>
+<main><p>课程以四章十节循序展开：DID、PSM、结合识别、匹配诊断、双软件实证、推断与完整研究。本节只建立DID的反事实逻辑。</p>
+<h2>一、真实数据与研究背景</h2><p>后续全课程复用Card与Krueger（1994）对新泽西州（NJ）与宾夕法尼亚州（PA）快餐店的调查。1992年4月1日，新泽西州最低时薪由4.25美元提高至5.05美元，宾州未同步提高。原研究调查两州410家快餐店，有政策前后结果和处理前店铺特征。</p>
+<table><thead><tr><th>研究要素</th><th>定义</th></tr></thead><tbody>
+<tr><td>处理组 / 对照组</td><td>NJ / PA快餐店</td></tr><tr><td>政策前 / 后</td><td>1992年初 / 1992年末</td></tr><tr><td>结果变量</td><td>全职当量就业人数（FTE）</td></tr><tr><td>处理前协变量</td><td>品牌、经营权、政策前就业及工资</td></tr></tbody></table>
+<p><a href="https://eml.berkeley.edu/~card/data_sets/njmin.zip">作者公开原始数据 ZIP</a>（解压后 <code>public.dat</code> 为主体、<code>codebook</code> 为说明）；另见<a href="https://www.nber.org/papers/w4509">NBER论文资料</a>。这套数据只有两期、仅两个州，无法直接检验政策前平行趋势，政策层面的聚类推断也存在局限。以下表中数值均为教学案例，不是实际研究的样本均值。</p>
+<h2>二、反事实与ATT</h2><p>如果NJ就业增加了3人，不代表政策创造了3个岗位。即使没有政策，经济景气、季节需求等也可能引起就业变化。</p>
+<p>设 $D_i=1$ 是处理组，$D_i=0$ 是对照组；$Y_{i1}(1)$ 为单位$i$在政策后受处理时的潜在结果，$Y_{i1}(0)$ 为未受处理时的反事实结果。处理组平均处理效应为：</p>
+<div class="equation">$$ATT=E[Y_{i1}(1)-Y_{i1}(0)\mid D_i=1].$$</div>
+<p>对于同一个已受处理的单位，我们不可能同时观察到它未受处理时的就业。DID的目标是借助对照组变化来重建这一缺失的反事实变化。</p>
+<h2>三、2×2案例：手工算出DID</h2>
+<table><thead><tr><th>组别</th><th>政策前</th><th>政策后</th><th>变化</th></tr></thead><tbody><tr><td>NJ（处理）</td><td>20</td><td>23</td><td>+3</td></tr><tr><td>PA（对照）</td><td>22</td><td>21</td><td>−1</td></tr></tbody></table>
+<p>如果没有政策，两组平均就业变化相同，则NJ无政策时政策后就业应为$20-1=19$。实际就业是23，因此反事实差距是4人。</p>
+<div class="equation">$$\widehat{ATT}_{DID}=(\bar Y_{T,1}-\bar Y_{T,0})-(\bar Y_{C,1}-\bar Y_{C,0})=(23-20)-(21-22)=4.$$</div>
+<div class="figure"><svg viewBox="0 0 720 230" role="img" aria-label="政策前后NJ处理组、PA对照组和NJ反事实走势" style="width:100%;height:auto">
+<line x1="90" y1="176" x2="660" y2="176" stroke="#8899aa" /><line x1="90" y1="23" x2="90" y2="176" stroke="#8899aa"/>
+<polyline points="195,130 490,45" fill="none" stroke="#168e87" stroke-width="4"/><polyline points="195,87 490,108" fill="none" stroke="#528ad7" stroke-width="4"/><line x1="195" y1="130" x2="490" y2="151" stroke="#168e87" stroke-dasharray="9 6" stroke-width="3"/>
+<line x1="490" y1="45" x2="490" y2="151" stroke="#b77927" stroke-width="3"/>
+<circle cx="195" cy="130" r="5" fill="#168e87"/><circle cx="195" cy="87" r="5" fill="#528ad7"/><circle cx="490" cy="45" r="5" fill="#168e87"/><circle cx="490" cy="108" r="5" fill="#528ad7"/><circle cx="490" cy="151" r="5" fill="#168e87"/>
+<g font-family="sans-serif" font-size="15" fill="#22364b"><text x="500" y="41">NJ实际：23</text><text x="500" y="105">PA实际：21</text><text x="500" y="157">NJ反事实：19</text><text x="195" y="199" text-anchor="middle">政策前</text><text x="490" y="199" text-anchor="middle">政策后</text></g><text x="470" y="90" font-size="16" font-weight="bold" fill="#b77927" text-anchor="end">ATT=4</text>
+</svg><p class="figcaption">实线为观测结果，绿色虚线为依据平行趋势构造的反事实。</p></div>
+<p>4是需要识别假设支撑的估计量，不是直接观察到的政策因果效应。</p>
+<h2>四、平行趋势是识别关键</h2><p>平行趋势不是“政策前结果水平相同”，而是“如果没有政策，两组应当经历相同的平均结果变化”。</p>
+<div class="equation">$$E[Y_{i1}(0)-Y_{i0}(0)\mid D_i=1]=E[Y_{i1}(0)-Y_{i0}(0)\mid D_i=0].$$</div>
+<p>本例政策前NJ为20、PA为22，水平差异不破坏DID。若NJ因为其他经济冲击原本就会比PA多增加4人，估计量就可能被错误地解释为政策效应。无预期效应、无显著溢出、无重要的同期混杂干预、样本组成合理等也是实证时必须考虑的条件。只有一个政策前观测期，无法直接验证政策前趋势。</p>
+<h2>五、两期DID回归模型</h2><div class="equation">$$Y_{it}=\alpha+\beta D_i+\gamma Post_t+\delta(D_i\times Post_t)+\varepsilon_{it}.$$</div>
+<p>$\alpha$是政策前PA均值，$\beta$是两组政策前水平差异，$\gamma$是PA随时间的平均变化，$\delta$是NJ额外变化。在标准两组两期、没有额外协变量的模型中，交互项OLS系数$\delta$等于前述双重差分；只有条件成立时才解释为ATT。</p>
+<h2>六、Stata与Python双软件</h2><p>同一组教学数值，两个程序均按手算应输出DID=4；并未声称已经在两种软件实际运行。因为每个组别时期只设定了一个值，不进行标准误计算。</p>
+<h3>Stata</h3><pre><code>clear all
+* 第1章·第1节 DID基础：教学案例，非真实估计
+* treated=1 新泽西州；treated=0 宾夕法尼亚州
+* post=1 政策后；post=0 政策前
+input byte treated byte post double y
+1 0 20
+1 1 23
+0 0 22
+0 1 21
+end
+
+quietly summarize y if treated==1 &amp; post==0
+scalar T0=r(mean)
+quietly summarize y if treated==1 &amp; post==1
+scalar T1=r(mean)
+quietly summarize y if treated==0 &amp; post==0
+scalar C0=r(mean)
+quietly summarize y if treated==0 &amp; post==1
+scalar C1=r(mean)
+
+* 双重差分：(23-20)-(21-22)=4
+scalar DID=(T1-T0)-(C1-C0)
+display "DID = " DID
+* 教学案例每个单元格只有一个设定值，不估计标准误。</code></pre>
+<h3>Python</h3><pre><code>import pandas as pd
+
+# 第1章·第1节 DID基础；数字为教学案例，非真实研究样本
+df = pd.DataFrame({
+    "treated": [1, 1, 0, 0],
+    "post": [0, 1, 0, 1],
+    "y": [20, 23, 22, 21]
+})
+means = df.groupby(["treated", "post"])["y"].mean().unstack()
+
+# 计算处理组与对照组的前后变化
+change_t = means.loc[1, 1] - means.loc[1, 0]
+change_c = means.loc[0, 1] - means.loc[0, 0]
+did = change_t - change_c
+print(f"DID = {did:.1f}")  # DID = 4.0
+# 每组每期仅一个人为设定值，不能据此进行统计显著性推断。
+</code></pre>
+<p>完整独立代码也可在<a href="did_demo.do">Stata .do</a>与<a href="did_demo.py">Python .py</a>中查看。</p>
+<h2>七、三个重要误区</h2>
+<p><strong>误区1：</strong>处理组政策后表现更好就说明政策有效。错误；政策后的组间差异可能来自原有水平差异。</p>
+<p><strong>误区2：</strong>DID可以消除所有遗漏变量偏差。错误；无法自动消除组间不同的时间变动冲击。</p>
+<p><strong>误区3：</strong>平行趋势要求政策前两组均值相等。错误；关键是没有处理时两组的平均变化应相同。</p>
+<h2>八、两分钟自测（含参考答案）</h2>
+<p><strong>理论题：</strong>平行趋势是否要求处理前处理组、对照组的就业均值相同？<br><strong>答案：</strong>不要求，只要求无政策时的平均就业变化相同。</p>
+<p><strong>计算题：</strong>处理组从50增到65，对照组从40增到48，DID是多少？<br><strong>答案：</strong>$(65-50)-(48-40)=7$。</p>
+<h2>九、学习进度</h2><p>已完成：第1章第1节；全课程第1课 / 共10课。本节核心：反事实、ATT、两次差分、平行趋势及两期回归。</p>
+<div class="notice"><strong>下一节：</strong>第1章·第2节｜PSM的基本原理。只有在收到明确学习指令后继续。</div>
+<p>研究来源：<a href="https://www.nber.org/papers/w4509">Card & Krueger (1994), NBER working paper</a>；<a href="https://economics.mit.edu/people/faculty/josh-angrist/mhe-data-archive">MIT数据归档</a>；<a href="https://eml.berkeley.edu/~card/data_sets.html">David Card数据页</a>。</p>
+</main><footer>PSM-DID系统精讲课程 · 2026-10-10<br><a class="footerlink" href="../../../../index.html">返回研究学习中心</a></footer>
+</body></html>
