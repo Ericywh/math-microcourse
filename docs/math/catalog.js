@@ -20,8 +20,8 @@ window.MATH_COURSE={
           "number": 2,
           "title": "向量的线性组合：从加权总分到回归预测",
           "published": true,
-          "date": "2026-10-09",
-          "url": "lessons/01-02.html"
+          "date": "2026-10-10",
+          "url": "lessons/2026-10-10-01-02.html"
         },
         {
           "chapter": 1,
