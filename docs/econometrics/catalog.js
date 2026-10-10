@@ -42,9 +42,9 @@ window.ECON_COURSE={
           "chapter": 1,
           "section": 4,
           "title": "期望、方差、协方差、标准误、假设检验和p值",
-          "published": false,
-          "date": null,
-          "url": null
+          "published": true,
+          "date": "2026-10-10",
+          "url": "lessons/01-04.html"
         },
         {
           "id": "01-05",
