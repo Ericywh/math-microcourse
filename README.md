@@ -2,8 +2,8 @@
 
 这是五门长期课程的**公开展示仓库**，所有公开课文均保留独立目录，并通过统一入口导航。
 
-**网站首页**：https://ericywh.github.io/math-microcourse/  
-**五门课程索引**：https://ericywh.github.io/math-microcourse/study/#courses
+**网站首页**：https://ericywh.github.io/research-learning-hub/  
+**五门课程索引**：https://ericywh.github.io/research-learning-hub/study/#courses
 
 ## 五门公开课程
 
@@ -28,6 +28,6 @@ GitHub Pages：`Settings → Pages → Deploy from a branch → main → /docs`�
 
 课程的“已归档”状态只依据真实交付并存在于此仓库的完整网页，不得按照日历自动推测进度。私人主档案仓库 `research-learning-archive` 作为独立备份保留，不直接镜像或推送其全部 Git 历史。后续只发布经核查、明确可公开的文档；勿上传私人笔记、付费全文或受限数据。
 
-## 关于仓库名称
+## 仓库名称与发布目标
 
-当前 GitHub 仓库的技术名称仍为 `math-microcourse`，以维持既有 Pages 地址稳定。网站展示名称已统一改为**研究学习中心**。如果在 GitHub 设置中将仓库改名为 `research-learning-hub`，公开 Pages 项目路径将对应变为 `/research-learning-hub/`，原有项目 Pages URL 不会自动保持。
+本公开仓库现名为 `Ericywh/research-learning-hub`，正式站点为 https://ericywh.github.io/research-learning-hub/ 。后续五门课程的公开课文均在此仓库 `main` 分支的 `docs/` 中按既有目录发布、维护对应索引和导航；保留独立私人备份仓库 `Ericywh/research-learning-archive`，不将私人笔记、受限论文或数据公开上传。项目网址更名后，旧的 `/math-microcourse/` GitHub Pages 地址不应再被当成正式发布入口。
