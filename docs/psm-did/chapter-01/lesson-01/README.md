@@ -1,21 +1,15 @@
 # 第1章·第1节｜DID的基本原理
 
-全课程第1课 / 共10课。课程正文为本目录 `index.html`，与Notion私人课程档案对应。
+全课程第1课 / 共10课。2026-10-10已交付。课程正文为 `index.html`；本次整理与聊天授课统一采用教学构造的2×2案例（NJ 18→20、PA 15→14，DID=3），而代码采用真实NJ/PA快餐店数据；二者不可混为真实估计结果。
 
-## 文件
-- `index.html`：适用于手机/电脑的完整中文课程页面（含公式、SVG概念图、习题）
-- `did_demo.do`：Stata 2×2教学演算
-- `did_demo.py`：Python/pandas同一教学演算
+- `index.html`：中文完整课程（公式、示意图、自测和参考答案）。
+- `did_demo.do`：Stata对真实教学整理版数据的DID变化量估计。
+- `did_demo.py`：Python对同一数据、同一样本筛选的DID变化量估计。
 
-## 运行环境
-Stata：支持 `input`、`summarize` 和 `scalar` 的常见版本。
-Python：3.9+，`pip install pandas`，运行 `python did_demo.py`。
-两段示例预计输出 DID=4，因每个单元仅一个假定数值，不用于统计推断；课程交付时未运行Stata核验。
+## 运行
+Stata：运行 `do did_demo.do`，或在Stata中打开并执行。
+Python：`pip install pandas statsmodels`，运行 `python did_demo.py`。
+脚本需要网络连接以读取 https://ditraglia.com/data/minwage.dta 。若无法联网，请先下载该数据至本地并替换读取路径。数据变量说明：https://ditraglia.com/erm/ps4-q3-minwage.html。
 
-## 后续贯穿数据
-Card, D. & Krueger, A. B. (1994). NJ/PA 1992 fast-food minimum-wage survey.
-原始数据： https://eml.berkeley.edu/~card/data_sets/njmin.zip
-解压后使用 `public.dat` 与 `codebook`。
-MIT教学档案：https://economics.mit.edu/people/faculty/josh-angrist/mhe-data-archive
-
-**注意**：作者原始调查含410家餐馆，但两波具体可用配对样本数应通过缺失清洗确定，不应直接当作410家完整配对。政策仅两个州，不能由此将州级聚类标准误视作可靠。仅有一期政策前观察，不能直接检验政策前平行趋势。
+## 解释边界
+本课未在两个软件中实际验证输出，不能把教学构造案例的DID=3当作真实政策估计。仅两个州且只有一期处理前调查，不能直接检验政策前动态平行趋势，常规餐厅层面标准误也不提供可靠的州级政策推断。原始数据：https://davidcard.berkeley.edu/data_sets/njmin.zip。

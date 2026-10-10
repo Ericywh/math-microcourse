@@ -1,24 +1,21 @@
-clear all
-* 第1章·第1节 DID基础：教学案例，非真实估计
-* treated=1 新泽西州；treated=0 宾夕法尼亚州
-* post=1 政策后；post=0 政策前
-input byte treated byte post double y
-1 0 20
-1 1 23
-0 0 22
-0 1 21
-end
+* 第1章·第1节：使用统一的真实NJ/PA最低工资数据
+* 数据说明：https://ditraglia.com/erm/ps4-q3-minwage.html
+* 文件需可联网访问；也可先下载到本地再修改use路径
+use "https://ditraglia.com/data/minwage.dta", clear
 
-quietly summarize y if treated==1 & post==0
-scalar T0=r(mean)
-quietly summarize y if treated==1 & post==1
-scalar T1=r(mean)
-quietly summarize y if treated==0 & post==0
-scalar C0=r(mean)
-quietly summarize y if treated==0 & post==1
-scalar C1=r(mean)
+* 两轮均有工资与就业数据的餐厅；保留本课所需非缺失项
+keep if sample == 1
+keep if !missing(state, fte, fte2)
 
-* 双重差分：(23-20)-(21-22)=4
-scalar DID=(T1-T0)-(C1-C0)
-display "DID = " DID
-* 教学案例每个单元格只有一个设定值，不估计标准误。
+* state=1表示新泽西州，state=0表示宾夕法尼亚州
+* fte是政策前全职等价就业；fte2是政策后
+generate double d_fte = fte2 - fte
+
+* 查看两州两轮样本均值与各自变化
+tabstat fte fte2 d_fte, by(state) stat(n mean)
+
+* 两期DID等价的变化量回归，state系数就是DID点估计
+regress d_fte state
+
+* 警告：政策仅在两个州之间变化；上述常规OLS标准误
+* 不应解释为可靠的州级政策冲击显著性推断。

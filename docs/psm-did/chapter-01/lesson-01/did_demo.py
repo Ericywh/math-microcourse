@@ -1,16 +1,25 @@
 import pandas as pd
+import statsmodels.formula.api as smf
 
-# 第1章·第1节 DID基础；数字为教学案例，非真实研究样本
-df = pd.DataFrame({
-    "treated": [1, 1, 0, 0],
-    "post": [0, 1, 0, 1],
-    "y": [20, 23, 22, 21]
-})
-means = df.groupby(["treated", "post"])["y"].mean().unstack()
+# 与Stata相同的Card-Krueger NJ/PA数据教学整理版
+url = "https://ditraglia.com/data/minwage.dta"
+df = pd.read_stata(url, convert_categoricals=False)
 
-# 计算处理组与对照组的前后变化
-change_t = means.loc[1, 1] - means.loc[1, 0]
-change_c = means.loc[0, 1] - means.loc[0, 0]
-did = change_t - change_c
-print(f"DID = {did:.1f}")  # DID = 4.0
-# 每组每期仅一个人为设定值，不能据此进行统计显著性推断。
+# 统一样本定义，确保前后FTE均不缺失
+df = df.loc[df["sample"] == 1].copy()
+df = df.dropna(subset=["state", "fte", "fte2"])
+
+# state=1代表NJ处理组；0代表PA对照组
+df["d_fte"] = df["fte2"] - df["fte"]
+
+# 两州就业前后和就业变化均值
+means = df.groupby("state")[["fte", "fte2", "d_fte"]].mean()
+print(means)
+
+# 手工组间平均变化差异
+did = means.loc[1, "d_fte"] - means.loc[0, "d_fte"]
+print("DID估计值：", did)
+
+# 用变化量OLS验证点估计，不将默认标准误作为可靠州级推断
+model = smf.ols("d_fte ~ state", data=df).fit()
+print("回归DID系数：", model.params["state"])
