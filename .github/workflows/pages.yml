@@ -153,6 +153,46 @@ jobs:
           console.log('Prepared complete docs/ site and versioned catalog requests: ' + sha);
           NODE
 
+      - name: Auto-index research frontier and validate lesson links
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs'), path = require('node:path');
+          const dir = '_site/frontier', indexFile = path.join(dir, 'index.html');
+          if (!fs.existsSync(indexFile)) throw Error('Frontier archive index missing.');
+          const issues = fs.readdirSync(dir)
+            .filter(f => /^\d{4}-\d{2}-\d{2}\.html$/.test(f)).sort().reverse();
+          if (!issues.length) throw Error('No archived frontier issues.');
+          for (const file of issues) {
+            const html = fs.readFileSync(path.join(dir, file), 'utf8');
+            if (html.length < 1500 || !/<html\b/i.test(html) ||
+                !/<h1\b/i.test(html) || !html.includes(file.slice(0,10))) {
+              throw Error('Incomplete frontier HTML or mismatched issue date: ' + file);
+            }
+          }
+          let index = fs.readFileSync(indexFile, 'utf8');
+          const existing = Array.from(index.matchAll(/href=["'](\d{4}-\d{2}-\d{2}\.html)["']/g), x => x[1]);
+          for (const linked of existing) {
+            if (!issues.includes(linked)) throw Error('Frontier index contains broken issue link: ' + linked);
+          }
+          const missing = issues.filter(file => !existing.includes(file));
+          if (missing.length) {
+            const anchor = '<div class="paper"><h2>已整理日报</h2>';
+            if (!index.includes(anchor)) throw Error('Frontier archive insertion marker was not found.');
+            const cards = missing.map(file =>
+              '<div class="eyebrow">ARCHIVE · ' + file.slice(0,10) + '</div>' +
+              '<p><a href="' + file + '">阅读 ' + file.slice(0,10) + ' 完整前沿日报 →</a></p>'
+            ).join('');
+            index = index.replace(anchor, anchor + cards);
+            fs.writeFileSync(indexFile, index);
+            console.log('Automatically added missing frontier links:', missing.join(', '));
+          }
+          for (const file of issues) {
+            if (!index.includes('href="' + file + '"')) throw Error('Published frontier index missing ' + file);
+          }
+          console.log('Validated ' + issues.length + ' frontier issue pages and public index links.');
+          NODE
+
       - name: Upload complete site for Pages
         uses: actions/upload-pages-artifact@v3
         with:
@@ -220,3 +260,43 @@ jobs:
           grep -Fq 'id="s7"' /tmp/cssci-lesson.html
           grep -Fq 'Stata' /tmp/cssci-lesson.html
           echo "CSSCI GitHub Pages HTTPS smoke test passed: index, catalog and latest complete lesson."
+
+  verify-public-frontier:
+    name: Verify public frontier pages
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out published source
+        uses: actions/checkout@v4
+
+      - name: Check frontier archive and latest issues over HTTPS
+        shell: bash
+        env:
+          DEPLOY_SHA: \${{ github.sha }}
+        run: |
+          set -euo pipefail
+          SITE="https://ericywh.github.io/research-learning-hub/frontier"
+          mapfile -t ISSUES < <(find docs/frontier -maxdepth 1 -type f -name '????-??-??.html' -printf '%f\n' | sort -r | head -n 2)
+          if (( \${#ISSUES[@]} == 0 )); then
+            echo "::error::No frontier lesson found in repository."
+            exit 1
+          fi
+          check() {
+            local url="$1" expected="$2" output="$3" status
+            for attempt in $(seq 1 10); do
+              status=$(curl -L -sS --connect-timeout 10 --max-time 30 -o "$output" -w '%{http_code}' "$url?deploy=$DEPLOY_SHA" || true)
+              if [[ "$status" == "200" ]] && grep -Fq "$expected" "$output"; then
+                echo "PASS HTTP 200 and expected content: $url"
+                return 0
+              fi
+              echo "Attempt $attempt: status=$status or expected marker missing at $url"
+              sleep 12
+            done
+            echo "::error::Frontier public URL failed HTTP/content check: $url"
+            return 1
+          }
+          check "$SITE/" "\${ISSUES[0]}" /tmp/frontier-index.html
+          for issue in "\${ISSUES[@]}"; do
+            check "$SITE/$issue" "\${issue%.html}" "/tmp/frontier-$issue"
+          done
+          echo "Frontier public smoke test passed: archive index and \${#ISSUES[@]} latest issues."
