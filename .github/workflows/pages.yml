@@ -272,12 +272,12 @@ jobs:
       - name: Check frontier archive and latest issues over HTTPS
         shell: bash
         env:
-          DEPLOY_SHA: \${{ github.sha }}
+          DEPLOY_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           SITE="https://ericywh.github.io/research-learning-hub/frontier"
           mapfile -t ISSUES < <(find docs/frontier -maxdepth 1 -type f -name '????-??-??.html' -printf '%f\n' | sort -r | head -n 2)
-          if (( \${#ISSUES[@]} == 0 )); then
+          if (( ${#ISSUES[@]} == 0 )); then
             echo "::error::No frontier lesson found in repository."
             exit 1
           fi
@@ -295,8 +295,8 @@ jobs:
             echo "::error::Frontier public URL failed HTTP/content check: $url"
             return 1
           }
-          check "$SITE/" "\${ISSUES[0]}" /tmp/frontier-index.html
-          for issue in "\${ISSUES[@]}"; do
-            check "$SITE/$issue" "\${issue%.html}" "/tmp/frontier-$issue"
+          check "$SITE/" "${ISSUES[0]}" /tmp/frontier-index.html
+          for issue in "${ISSUES[@]}"; do
+            check "$SITE/$issue" "${issue%.html}" "/tmp/frontier-$issue"
           done
-          echo "Frontier public smoke test passed: archive index and \${#ISSUES[@]} latest issues."
+          echo "Frontier public smoke test passed: archive index and ${#ISSUES[@]} latest issues."
