@@ -41,13 +41,13 @@ footer{border-top:1px solid var(--line);margin-top:45px;padding:28px 0;font-size
 </div><p id="count" class="meta" role="status">载入公开书目中…</p><div id="papers"></div></section>
 <section class="panel" id="about"><h2>精读入库标准</h2>
 <p>每期正式报告均以全文可读为前提，完整覆盖：论文基本信息、贡献、模型与识别、数据、核心变量、Stata代码、复现条件与审稿评价。复现代码必须标明作者原码或根据研究设计自行推导；只有实际运行核对后才能标注数值复现成功。</p>
-<div class="note"><strong>当前公开范围：</strong>本仓库为公开仓库，本页面只收录可公开的论文书目信息和复现状态。2026-10-09的完整私人复现导读已在ChatGPT会话中交付，但尚未获授权上传至公开网站。期刊原始PDF、付费数据库和私人研究文件不会自动复制到站点。</div>
+<div class="note"><strong>当前公开范围：</strong>本公开仓库收录已核实的论文书目与经授权公开的自行撰写七模块精读导读；2026-10-09旧期私人导读暂未公开。期刊PDF、付费数据库、Notion私人页面和未经授权的作者数据或代码均不复制到站点。</div>
 <h2>长期维护规则</h2>
 <ol class="steps">
 <li>每次选文前核查来源期刊CSSCI资格、正式出版信息及全文可访问性。</li>
 <li>将新纪录追加到 <code>docs/cssci/catalog.js</code>，严格标注已核实状态；用日期、主题、方法和数据结构归档。</li>
-<li>若获授权公开单篇完整导读，再将HTML放入 <code>docs/cssci/reports/</code> 并填写 <code>article_url</code>。</li>
-<li>只有真实提交到仓库后，GitHub Pages 才会更新；ChatGPT每日提醒本身不自动向仓库写入文件。</li>
+<li>公开单篇完整导读存于 <code>docs/cssci/lessons/</code>，文件存在且七模块齐备后才将对应 <code>article_url</code> 标注为 published。</li>
+<li>每日课程任务负责在授权范围内写入Notion和GitHub；GitHub Actions负责目录与HTML校验、自动部署及公开站点抽检。三种状态必须分别记录，失败不得宣称成功。</li>
 </ol></section>
 </main>
 <footer><div class="wrap">CSSCI实证论文复现精读库 · 统计与计量研究课程站 · 持续收录经核验的研究</div></footer>
