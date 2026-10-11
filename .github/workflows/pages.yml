@@ -77,9 +77,14 @@ jobs:
           const sha = process.env.DEPLOY_SHA.slice(0, 12);
           const changes = [
             { file: '_site/index.html', regex: /src="econometrics\/catalog\.js(?:\?[^"]*)?"/g, target: 'econometrics/catalog.js' },
+            { file: '_site/index.html', regex: /src="math\/catalog\.js(?:\?[^"]*)?"/g, target: 'math/catalog.js' },
+            { file: '_site/index.html', regex: /src="assets\/hub\.js(?:\?[^"]*)?"/g, target: 'assets/hub.js' },
+            { file: '_site/study/index.html', regex: /src="\.\.\/econometrics\/catalog\.js(?:\?[^"]*)?"/g, target: '../econometrics/catalog.js' },
+            { file: '_site/study/index.html', regex: /src="\.\.\/math\/catalog\.js(?:\?[^"]*)?"/g, target: '../math/catalog.js' },
+            { file: '_site/study/index.html', regex: /src="\.\.\/assets\/hub\.js(?:\?[^"]*)?"/g, target: '../assets/hub.js' },
             { file: '_site/econometrics/index.html', regex: /src="catalog\.js(?:\?[^"]*)?"/g, target: 'catalog.js' }
           ];
-          for (const item of changes) {
+                    for (const item of changes) {
             const previous = fs.readFileSync(item.file, 'utf8');
             const updated = previous.replace(item.regex, 'src="' + item.target + '?v=' + sha + '"');
             if (updated === previous) throw Error('Cannot version catalog reference: ' + item.file);
