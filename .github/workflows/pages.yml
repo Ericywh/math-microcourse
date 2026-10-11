@@ -66,6 +66,61 @@ jobs:
           console.log('Validated ' + published + ' published lessons / 120; all public lesson links resolve to files.');
           NODE
 
+      - name: Validate published CSSCI lessons
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm');
+          const catalogFile = 'docs/cssci/catalog.js';
+          const indexFile = 'docs/cssci/index.html';
+          if (!fs.existsSync(catalogFile) || !fs.existsSync(indexFile)) {
+            throw Error('CSSCI catalog or index missing');
+          }
+          const index = fs.readFileSync(indexFile, 'utf8');
+          if (!index.includes('catalog.js') || !index.includes('id="papers"')) {
+            throw Error('CSSCI homepage has no working catalog reference');
+          }
+          const ctx = {window:{}};
+          vm.runInNewContext(fs.readFileSync(catalogFile,'utf8'), ctx, {timeout:2000});
+          const records=ctx.window.CSSCI_CATALOG;
+          if (!Array.isArray(records) || !records.length) throw Error('Empty CSSCI catalog');
+          const ids=new Set(), urls=new Set(), dois=new Set();
+          let published=0;
+          for(const r of records){
+            if(!r.id || ids.has(r.id)) throw Error('Missing or duplicate CSSCI ID');
+            ids.add(r.id);
+            if(!r.title || !r.date || !r.authors || !r.journal) throw Error('Incomplete bibliography: '+r.id);
+            if(r.doi && dois.has(r.doi)) throw Error('Duplicate DOI: '+r.doi);
+            if(r.doi)dois.add(r.doi);
+            if(!['metadata','published'].includes(r.status)) throw Error('Unknown publication status: '+r.id);
+            if(r.status==='metadata') {
+              if(r.article_url)throw Error('Metadata-only entry wrongly marked published: '+r.id);
+              continue;
+            }
+            if(!/^lessons\/\d{2}-\d{2}-\d{4}-\d{2}-\d{2}\.html$/.test(r.article_url||'')){
+              throw Error('Invalid published lesson URL: '+r.id);
+            }
+            if(urls.has(r.article_url))throw Error('Duplicate lesson path: '+r.id);
+            urls.add(r.article_url);
+            const file=path.join('docs/cssci',r.article_url);
+            if(!fs.existsSync(file))throw Error('Published lesson missing: '+file);
+            const html=fs.readFileSync(file,'utf8');
+            if(html.length<4000 || !/<!doctype html>/i.test(html)){
+              throw Error('HTML lesson missing or incomplete: '+file);
+            }
+            for(let k=1;k<=7;k++){
+              if(!html.includes('id="s'+k+'"'))throw Error('Module '+k+' missing: '+file);
+            }
+            if(!html.includes(r.title) || !html.includes(r.doi) ||
+                !html.toLowerCase().includes('stata') || /&lt;mention-page/.test(html)){
+              throw Error('Lesson content mismatch or unconverted Notion link: '+file);
+            }
+            published++;
+          }
+          if(!published)throw Error('No published CSSCI lessons');
+          console.log('CSSCI: '+records.length+' bibliography records, '+published+' complete published lessons.');
+          NODE
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
@@ -86,7 +141,8 @@ jobs:
             { file: '_site/study/index.html', regex: /src="\.\.\/econometrics\/catalog\.js(?:\?[^"]*)?"/g, target: '../econometrics/catalog.js' },
             { file: '_site/study/index.html', regex: /src="\.\.\/math\/catalog\.js(?:\?[^"]*)?"/g, target: '../math/catalog.js' },
             { file: '_site/study/index.html', regex: /src="\.\.\/assets\/hub\.js(?:\?[^"]*)?"/g, target: '../assets/hub.js' },
-            { file: '_site/econometrics/index.html', regex: /src="catalog\.js(?:\?[^"]*)?"/g, target: 'catalog.js' }
+            { file: '_site/econometrics/index.html', regex: /src="catalog\.js(?:\?[^"]*)?"/g, target: 'catalog.js' },
+            { file: '_site/cssci/index.html', regex: /src="catalog\.js(?:\?[^"]*)?"/g, target: 'catalog.js' }
           ];
                     for (const item of changes) {
             const previous = fs.readFileSync(item.file, 'utf8');
