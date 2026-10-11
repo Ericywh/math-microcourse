@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="每日10分钟数学微课程第3课：矩阵与多变量数据表"><title>第1章·第3节｜矩阵与多变量数据表</title><link rel="stylesheet" href="../site.css"><script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]}};</script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script><style>.mathbox{overflow-x:auto}.note{border-left:4px solid #427b6c;padding:12px 16px;background:#eff8f3}table{width:100%;border-collapse:collapse;margin:18px 0}th,td{padding:9px 12px;border-bottom:1px solid #d5e1db;text-align:left}th{background:#edf6f1}.exercises{padding:18px;border:1px solid #d0e2d8;border-radius:10px;background:#f6fbf8}summary{cursor:pointer;font-weight:bold}</style></head><body><header><div class="wrap"><a href="../#catalog">← 返回数学课程目录</a><a href="../../study/#courses">学习中心 ↗</a></div></header><div class="reading"><div class="kicker">CHAPTER 01 · LESSON 03</div><h1>第1章·第3节｜矩阵与多变量数据表</h1><p class="metadata">全课程第3课 / 共73课 · 预计学习8分钟 · 2026年10月11日（重新开始版）</p><article class="article"><h2>一、核心问题：为什么数据表就是矩阵？</h2>
+<p>上一课，我们用线性组合把多列变量转化为预测值。但在计算之前，必须先回答：几百个样本、多个变量，怎样才能准确地放在一起？</p>
+<p>最自然的方法是数据表：每行记录一个观测单位，每列记录一个变量。去掉文字标签，只保留数值，便得到矩阵。<strong>矩阵不只是数字的排列，更规定了数据之间的对应关系。</strong></p>
+<p>例如，研究三家企业的绿色专利申请数量时，可以把企业规模、研发投入分别作为两列解释变量；同一行的数据必须属于同一家企业。如果错把另一家企业的研发投入拼到这一行，后续计算即使没有算术错误，研究对象也已被改变。</p>
+<h2>二、关键公式与维度</h2>
+<p>设共有 \(n\) 个观测单位、\(p\) 列数值变量，数据矩阵写成：</p>
+<div class="mathbox">\[\boxed{X=(x_{ij})_{n\times p}\in\mathbb R^{n\times p}}\]</div>
+<p>\(x_{ij}\) 表示<strong>第 \(i\) 行、第 \(j\) 列</strong>的数值。行索引 \(i\) 对应观测单位，列索引 \(j\) 对应变量；只有同一列具有一致的变量定义和计量单位，比较才有意义。</p>
+<p>若用矩阵做线性预测，则：</p>
+<div class="mathbox">\[\boxed{\widehat y=Xb,\quad X:n\times p,\ b:p\times1,\ \widehat y:n\times1}\]</div>
+<p>这里的 \(p\) 包括截距列（如果模型设置了截距）。乘法要求 \(X\) 的列数等于 \(b\) 的行数；<strong>矩阵能相乘，并不意味着系数能被唯一估计</strong>。唯一的普通最小二乘系数解还涉及设计矩阵是否满列秩。</p>
+<h2>三、手算案例：从数据表到矩阵</h2>
+<p>沿用上一课的三名教学样本，数据均为人为构造，不代表真实调查。</p>
+<table><thead><tr><th>个体</th><th>\(x_1\)</th><th>\(x_2\)</th><th>\(y\)</th></tr></thead><tbody><tr><td>A</td><td>1</td><td>0</td><td>6</td></tr><tr><td>B</td><td>2</td><td>2</td><td>6</td></tr><tr><td>C</td><td>3</td><td>1</td><td>8</td></tr></tbody></table>
+<p>如果回归包含截距，就在最左边加入全为1的一列：</p>
+<div class="mathbox">\[X=\begin{pmatrix}1&1&0\\1&2&2\\1&3&1\end{pmatrix},
+\qquad y=\begin{pmatrix}6\\6\\8\end{pmatrix}\]</div>
+<p>此时 \(X\) 是 \(3\times3\) 矩阵。第二行 \((1,2,2)\) 描述B的解释变量；第三列 \((0,2,1)^\mathsf T\) 收集三人的第二个解释变量。元素 \(x_{23}=2\)，意为第二行、第三列的值是2，而不是第23个样本。</p>
+<p>矩阵的行列位置是固定的：若将B与C的行互换，也必须同步调整响应变量 \(y\) 的顺序。</p>
+<h2>四、统计与计量应用</h2>
+<p>在多元回归中，软件通常先把数据表转换为设计矩阵，再计算拟合值与残差。面板数据还需要明确“企业—年度”这样的观测单位：同一企业不同年份是不同的行，不能把企业数误当作总行数。</p>
+<p>当数据存在缺失、重复观测或变量错位时，应先核对样本键和处理规则；矩阵运算不会自动修复数据质量问题。今天掌握行、列、元素及维度，下一课才能真正理解矩阵乘向量的批量预测过程。</p>
+<h2>五、两分钟自测</h2><div class="exercises">
+<p><strong>第1题｜概念题：</strong>在企业—年度面板中，一行表示一家企业，还是一家企业在某一年的一次观测？为何变量列必须保持相同定义？</p>
+<p><strong>第2题｜计算题：</strong>上述含截距矩阵 \(X\) 的维度是多少？\(x_{23}\) 等于多少？</p>
+<details><summary>参考答案（完成两题后展开）</summary>
+<p><strong>第1题：</strong>一行对应一家企业在某一年的观测。列定义不一致时，同一列数值不再代表同一变量，模型解释失效。</p>
+<p><strong>第2题：</strong>\(X\) 为 \(3\times3\)；\(x_{23}=2\)。</p></details></div>
+<h2>六、知识衔接</h2>
+<p><strong>上节：</strong>向量线性组合说明如何加权求和。<strong>本节：</strong>矩阵说明多变量数据如何按行列组织。<strong>下节：</strong>第1章·第4节｜矩阵与向量相乘：批量预测（全课程第4课）。</p>
+<p class="note">本页属于2026年10月10日重新开始的新一轮第3课；<a href="01-03.html">2026年10月9日旧版同编号课页</a>单独保留。</p></article></div><footer><div class="wrap"><a href="../#catalog">73节课程目录</a> · 每日10分钟数学微课程</div></footer></body></html>
