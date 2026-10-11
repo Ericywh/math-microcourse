@@ -1,0 +1,105 @@
+name: Publish Research Learning Hub
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: research-learning-hub-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main branch
+        uses: actions/checkout@v4
+
+      - name: Validate published econometrics lessons
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const vm = require('node:vm');
+          const catalogFile = 'docs/econometrics/catalog.js';
+          const sandbox = { window: {} };
+          vm.runInNewContext(fs.readFileSync(catalogFile, 'utf8'), sandbox, { timeout: 2000 });
+          const chapters = sandbox.window.ECON_COURSE?.chapters;
+          if (!Array.isArray(chapters) || chapters.length !== 10) throw Error('Expected 10 econometrics chapters');
+          const lessons = chapters.flatMap(c => c.lessons);
+          if (lessons.length !== 120) throw Error('Expected 120 planned lessons');
+          const seen = new Set();
+          let published = 0;
+          for (const lesson of lessons) {
+            if (!lesson.id || seen.has(lesson.id)) throw Error('Duplicate or missing lesson ID');
+            seen.add(lesson.id);
+            if (!lesson.published) continue;
+            if (!/^lessons\/\d{2}-\d{2}\.html$/.test(lesson.url || '')) {
+              throw Error('Unsafe or missing lesson URL for ' + lesson.id);
+            }
+            const file = path.join('docs/econometrics', lesson.url);
+            if (!fs.existsSync(file)) throw Error('Published lesson is missing: ' + file);
+            const html = fs.readFileSync(file, 'utf8');
+            if (!/<!doctype html>/i.test(html) || html.length < 1500) {
+              throw Error('Published lesson is incomplete: ' + file);
+            }
+            published++;
+          }
+          if (!published) throw Error('No published lessons');
+          for (const file of ['docs/index.html', 'docs/econometrics/index.html', 'docs/.nojekyll']) {
+            if (!fs.existsSync(file)) throw Error('Required site file missing: ' + file);
+          }
+          console.log('Validated ' + published + ' published lessons / 120; all public lesson links resolve to files.');
+          NODE
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Prepare complete site and bust cached course catalogs
+        shell: bash
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p _site
+          cp -a docs/. _site/
+          node <<'NODE'
+          const fs = require('node:fs');
+          const sha = process.env.DEPLOY_SHA.slice(0, 12);
+          const changes = [
+            { file: '_site/index.html', regex: /src="econometrics\/catalog\.js(?:\?[^"]*)?"/g, target: 'econometrics/catalog.js' },
+            { file: '_site/econometrics/index.html', regex: /src="catalog\.js(?:\?[^"]*)?"/g, target: 'catalog.js' }
+          ];
+          for (const item of changes) {
+            const previous = fs.readFileSync(item.file, 'utf8');
+            const updated = previous.replace(item.regex, 'src="' + item.target + '?v=' + sha + '"');
+            if (updated === previous) throw Error('Cannot version catalog reference: ' + item.file);
+            fs.writeFileSync(item.file, updated);
+          }
+          console.log('Prepared complete docs/ site and versioned catalog requests: ' + sha);
+          NODE
+
+      - name: Upload complete site for Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy site to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
