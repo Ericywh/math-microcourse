@@ -7,6 +7,10 @@ on:
       - 'docs/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
+  # Daily fallback if a GitHub App push event did not start deployment.
+  # 02:15 UTC = 10:15 Asia/Taipei; does not alter the ChatGPT lesson schedule.
+  schedule:
+    - cron: '15 2 * * *'
 
 permissions:
   contents: read
