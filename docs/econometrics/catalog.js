@@ -52,9 +52,9 @@ window.ECON_COURSE={
           "chapter": 1,
           "section": 5,
           "title": "完整计量研究流程",
-          "published": false,
-          "date": null,
-          "url": null
+          "published": true,
+          "date": "2026-10-11",
+          "url": "lessons/01-05.html"
         },
         {
           "id": "01-06",
