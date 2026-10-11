@@ -168,3 +168,55 @@ jobs:
       - name: Deploy site to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+
+  verify-public-cssci:
+    name: Verify public CSSCI pages
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out current source
+        uses: actions/checkout@v4
+
+      - name: Check HTTP 200, catalog freshness and latest published lesson
+        shell: bash
+        env:
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          SITE="https://ericywh.github.io/research-learning-hub/cssci"
+          node <<'NODE' > /tmp/cssci-latest.txt
+          const fs=require('node:fs'),vm=require('node:vm');
+          const ctx={window:{}};
+          vm.runInNewContext(fs.readFileSync('docs/cssci/catalog.js','utf8'),ctx);
+          const latest=ctx.window.CSSCI_CATALOG
+            .filter(r=>r.status==='published'&&r.article_url)
+            .sort((a,b)=>b.date.localeCompare(a.date))[0];
+          if(!latest)process.exit(2);
+          console.log(latest.article_url);
+          console.log(latest.id);
+          console.log(latest.title);
+          NODE
+          LATEST_PATH=$(sed -n '1p' /tmp/cssci-latest.txt)
+          LATEST_ID=$(sed -n '2p' /tmp/cssci-latest.txt)
+          LATEST_TITLE=$(sed -n '3p' /tmp/cssci-latest.txt)
+          check() {
+            local url="$1" output="$2" marker="$3"
+            for attempt in $(seq 1 10); do
+              status=$(curl -L -sS --connect-timeout 10 --max-time 30 -o "$output" -w '%{http_code}' "$url?deploy=$DEPLOY_SHA" || true)
+              if [[ "$status" == "200" ]] && grep -Fq "$marker" "$output"; then
+                echo "PASS HTTP 200 + expected content: $url"
+                return 0
+              fi
+              echo "Attempt $attempt: status $status or expected marker not yet deployed at $url"
+              sleep 12
+            done
+            echo "::error::Public GitHub Pages URL failed external HTTP and content check: $url"
+            return 1
+          }
+          check "$SITE/" /tmp/cssci-index.html 'CSSCI实证论文'
+          check "$SITE/catalog.js" /tmp/cssci-catalog.js "$LATEST_ID"
+          check "$SITE/$LATEST_PATH" /tmp/cssci-lesson.html "$LATEST_TITLE"
+          grep -Fq 'id="s7"' /tmp/cssci-lesson.html
+          grep -Fq 'Stata' /tmp/cssci-lesson.html
+          echo "CSSCI GitHub Pages HTTPS smoke test passed: index, catalog and latest complete lesson."
